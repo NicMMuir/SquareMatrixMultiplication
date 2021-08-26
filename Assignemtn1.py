@@ -1,32 +1,79 @@
 import math
-import numpy as np
-
+import time
+import random
+import csv
 
 
 
 def partition_Matrix(M):
     n = len(M)
-    m1 = M[:n//2,:n//2]
-    m2 = M[:n//2,n//2:]
-    m3 = M[n//2:,:n//2]
-    m4 = M[n//2:,n//2:]
+    m1 = [[0 for k in range(n//2)] for j in range(n//2)]
+    m2 = [[0 for k in range(n//2)] for j in range(n//2)]
+    m3 = [[0 for k in range(n//2)] for j in range(n//2)]
+    m4 = [[0 for k in range(n//2)] for j in range(n//2)]
+
+    if n <3:
+        for k in range(n//2):
+            for j in range(n//2):
+                m1[k][j] = M[k][j]
+
+        for k in range(n//2):
+            for j in range((n+1)//2,n):
+                m2[k][j-1] = M[k][j]
+
+        for k in range((n+1)//2,n):
+            for j in range(n//2):
+                m3[k-1][j] = M[k][j]
+
+        for k in range((n+1)//2 ,n):
+            for j in range((n+1)//2 ,n):
+                m4[k-1][j-1] = M[k][j]
+    else:
+
+        for k in range(n//2):
+            for j in range(n//2):
+                m1[k][j] = M[k][j]
+
+
+
+        for k in range(n//2):
+            for j in range(n//2,n):
+                m2[k][j-n] = M[k][j]
+
+
+        for k in range(n//2,n-1):
+            for j in range(n//2):
+                m3[k-n][j] = M[k][j]
+
+
+        for k in range(n//2 ,n-1):
+            for j in range(n//2 ,n):
+                m4[k-n][j-n] = M[k][j]
+
     return m1,m2,m3,m4
 
 def Recombine_Matrix(m1,m2,m3,m4):
-    m12 = np.concatenate((m1,m2) , axis=1)
-    m34 = np.concatenate((m3,m4) , axis=1)
-    M = np.concatenate((m12,m34) , axis=0)
+
+    m12 = [[0 for k in range(len(m1[0]))] for j in range(len(m1))]
+    m34 = [[0 for k in range(len(m1[0]))] for j in range(len(m1))]
+    for k in range(len(m1)):
+        m12[k] = m1[k] + m2[k]
+        m34[k] = m3[k] + m4[k]
+    M = m12 + m34
+
+
     return(M)
 
 def Matrix_Add(M1 , M2):
-    Res= np.zeros((len(M1),len(M1[0])))
+    Res= [[0 for k in range(len(M1))] for j in range(len(M1))]
     for k in range(len(M1)):
         for j in range(len(M1[0])):
             Res[k][j] = M1[k][j]+M2[k][j]
     return Res
 
 def Matrix_Sub(M1 , M2):
-    Res= np.zeros((len(M1),len(M1[0])))
+
+    Res= [[0 for k in range(len(M1))] for j in range(len(M1))]
     for k in range(len(M1)):
         for j in range(len(M1[0])):
             Res[k][j] = M1[k][j]-M2[k][j]
@@ -34,7 +81,7 @@ def Matrix_Sub(M1 , M2):
 
 def DePad(M,pd):
     if pd == True:
-        Res= np.zeros((len(M)-1,len(M[0])-1))
+        Res= [[0 for k in range(len(M)-1)] for j in range(len(M)-1)]
         for k in range(len(M)-1):
             for j in range(len(M[0])-1):
                 Res[k][j] = M[k][j]
@@ -47,7 +94,7 @@ def DePad(M,pd):
 def Pad_Matrix(M):
     n = len(M)
 
-    New = np.zeros((n+1,n+1))
+    New = [[0 for i in range(n+1)] for j in range(n+1)]
     for k in range(n):
         for j in range(n):
             New[k][j] = M[k][j]
@@ -57,12 +104,11 @@ def Pad_Matrix(M):
 
 def Square_Matrix_Multiply(M1,M2):
     n = len(M1)
-    m = len(M2[0])
-    C = np.zeros((n,m))
+    C = [[0 for i in range(n)] for j in range(n)]
     for k in range(n):
-        for j in range(m):
+        for j in range(n):
             C[k][j] = 0
-            for l in range(m):
+            for l in range(n):
                 C[k][j] = C[k][j]+M1[k][l]*M2[l][j]
     return C
 
@@ -72,12 +118,12 @@ def Square_Matrix_Multiply_Recursive(A,B):
     if len(A)>1 and not len(A)%2 == 0 :
         padded = True
         A =  Pad_Matrix(A)
-        B = Pad_Matrix(B)
+        B =  Pad_Matrix(B)
 
     n = len(A)
 
 
-    C= np.zeros((n,n))
+    C= [[0 for i in range(n)] for j in range(n)]
     if n == 1:
         C[0][0]= A[0][0]*B[0][0]
     else:
@@ -103,7 +149,7 @@ def Strassens_Method(A,B):
         B = Pad_Matrix(B)
 
     n = len(A)
-    C= np.zeros((n,n))
+    C= [[0 for i in range(n)] for j in range(n)]
 
     if n == 1:
         C[0][0]= A[0][0]*B[0][0]
@@ -129,17 +175,53 @@ def Strassens_Method(A,B):
 
     return C
 
-M = np.random.randint(5, size=(5, 5))
-N = np.random.randint(5, size=(5, 5))
+M = [[random.randint(1,5) for k in range(3)] for j in range(3)]
+N = [[random.randint(1,5) for k in range(3)] for j in range(3)]
 
-print(M)
+print('Initial test')
+print('Matrix 1:' , M)
+print('Matrix 2:' , N)
 print()
-print(N)
-print('//////////')
-
 print(Square_Matrix_Multiply(M,N))
 print('//////////')
-
 print(Square_Matrix_Multiply_Recursive(M,N))
 print('//////////')
 print(Strassens_Method(M,N))
+print('###############################################')
+with open('Matrix.csv', mode='w') as MatrixSave:
+    MatrixSave = csv.writer(MatrixSave, delimiter=',')
+    MatrixSave.writerow(['Size of Matrix', 'Square_Matrix_Multiply', 'Square_Matrix_Multiply_Recursive','Strassens_Method'])
+    for k in range(2,100):
+        sumoftime1 = 0
+        sumoftime2 = 0
+        sumoftime3 = 0
+        print('Size of Matrix:',k)
+        for j in range(3):
+            C=  [[random.randint(1,20) for k in range(k)] for j in range(k)]
+            M = [[random.randint(1,20) for k in range(k)] for j in range(k)]
+            N = [[random.randint(1,20) for k in range(k)] for j in range(k)]
+
+
+            start = time.time()
+            Square_Matrix_Multiply(M,N)
+            end = time.time()
+            sumoftime1 = sumoftime1+(end-start)
+
+            start = time.time()
+            Square_Matrix_Multiply_Recursive(M,N)
+            end = time.time()
+            sumoftime2 = sumoftime2+(end-start)
+
+            start =time.time()
+            Strassens_Method(M,N)
+            end = time.time()
+            sumoftime3 = sumoftime3+(end-start)
+
+
+
+        MatrixSave.writerow([k, sumoftime1/3, sumoftime2/3,sumoftime3/3])
+
+
+        print('Square_Matrix_Multiply (s):',sumoftime1/3)
+        print('Square_Matrix_Multiply_Recursive (s):',sumoftime2/3)
+        print('Strassens_Method (s):',sumoftime3/3)
