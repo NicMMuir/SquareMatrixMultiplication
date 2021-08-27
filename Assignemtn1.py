@@ -7,10 +7,13 @@ import csv
 
 def partition_Matrix(M):
     n = len(M)
+    #Below is too slow
+    #
     m1 = [[0 for k in range(n//2)] for j in range(n//2)]
     m2 = [[0 for k in range(n//2)] for j in range(n//2)]
     m3 = [[0 for k in range(n//2)] for j in range(n//2)]
     m4 = [[0 for k in range(n//2)] for j in range(n//2)]
+
 
     if n <3:
         for k in range(n//2):
@@ -34,23 +37,27 @@ def partition_Matrix(M):
             for j in range(n//2):
                 m1[k][j] = M[k][j]
 
-
-
         for k in range(n//2):
             for j in range(n//2,n):
                 m2[k][j-n] = M[k][j]
-
 
         for k in range(n//2,n-1):
             for j in range(n//2):
                 m3[k-n][j] = M[k][j]
 
-
         for k in range(n//2 ,n-1):
             for j in range(n//2 ,n):
                 m4[k-n][j-n] = M[k][j]
 
+
+    div = int(n/2)
+
+
+
     return m1,m2,m3,m4
+
+
+
 
 def Recombine_Matrix(m1,m2,m3,m4):
 
@@ -188,40 +195,41 @@ print(Square_Matrix_Multiply_Recursive(M,N))
 print('//////////')
 print(Strassens_Method(M,N))
 print('###############################################')
-with open('Matrix.csv', mode='w') as MatrixSave:
-    MatrixSave = csv.writer(MatrixSave, delimiter=',')
-    MatrixSave.writerow(['Size of Matrix', 'Square_Matrix_Multiply', 'Square_Matrix_Multiply_Recursive','Strassens_Method'])
-    for k in range(2,100):
-        sumoftime1 = 0
-        sumoftime2 = 0
-        sumoftime3 = 0
-        print('Size of Matrix:',k)
-        for j in range(3):
-            C=  [[random.randint(1,20) for k in range(k)] for j in range(k)]
-            M = [[random.randint(1,20) for k in range(k)] for j in range(k)]
-            N = [[random.randint(1,20) for k in range(k)] for j in range(k)]
 
-
-            start = time.time()
-            Square_Matrix_Multiply(M,N)
-            end = time.time()
-            sumoftime1 = sumoftime1+(end-start)
-
-            start = time.time()
-            Square_Matrix_Multiply_Recursive(M,N)
-            end = time.time()
-            sumoftime2 = sumoftime2+(end-start)
-
-            start =time.time()
-            Strassens_Method(M,N)
-            end = time.time()
-            sumoftime3 = sumoftime3+(end-start)
-
-
-
-        MatrixSave.writerow([k, sumoftime1/3, sumoftime2/3,sumoftime3/3])
-
-
-        print('Square_Matrix_Multiply (s):',sumoftime1/3)
-        print('Square_Matrix_Multiply_Recursive (s):',sumoftime2/3)
-        print('Strassens_Method (s):',sumoftime3/3)
+# with open('Matrix.csv', mode='w') as MatrixSave:
+#     MatrixSave = csv.writer(MatrixSave, delimiter=',')
+#     MatrixSave.writerow(['Size of Matrix', 'Square_Matrix_Multiply', 'Square_Matrix_Multiply_Recursive','Strassens_Method'])
+#     for k in range(2,100):
+#         sumoftime1 = 0
+#         sumoftime2 = 0
+#         sumoftime3 = 0
+#         print('Size of Matrix:',k)
+#         for j in range(3):
+#             C=  [[random.randint(1,20) for k in range(k)] for j in range(k)]
+#             M = [[random.randint(1,20) for k in range(k)] for j in range(k)]
+#             N = [[random.randint(1,20) for k in range(k)] for j in range(k)]
+#
+#
+#             start = time.time()
+#             Square_Matrix_Multiply(M,N)
+#             end = time.time()
+#             sumoftime1 = sumoftime1+(end-start)
+#
+#             start = time.time()
+#             Square_Matrix_Multiply_Recursive(M,N)
+#             end = time.time()
+#             sumoftime2 = sumoftime2+(end-start)
+#
+#             start =time.time()
+#             Strassens_Method(M,N)
+#             end = time.time()
+#             sumoftime3 = sumoftime3+(end-start)
+#
+#
+#
+#         MatrixSave.writerow([k, sumoftime1/3, sumoftime2/3,sumoftime3/3])
+#
+#
+#         print('Square_Matrix_Multiply (s):',sumoftime1/3)
+#         print('Square_Matrix_Multiply_Recursive (s):',sumoftime2/3)
+#         print('Strassens_Method (s):',sumoftime3/3)
