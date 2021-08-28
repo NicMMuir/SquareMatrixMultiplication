@@ -18,10 +18,10 @@ with open('Matrix.csv','r') as file:
         y.append(float(elements[2]))
         z.append(float(elements[3]))
 
-plt.plot(label,x)
-plt.plot(label,y)
-plt.plot(label,z)
+plt.plot(label,x ,label='Matrix Multiply')
+plt.plot(label,y, label='Matrix Multiply Reccursion')
+plt.plot(label,z, label='Strassens')
 
-plt.title('Interesting Graph\nCheck it out')
+plt.title('Size of Matrix vs Time\nJava implementation')
 plt.legend()
 plt.show()
